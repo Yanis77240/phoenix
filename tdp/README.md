@@ -12,8 +12,19 @@ This command generates `phoenix-hbase-2.1-5.1.3-TDP-0.1.0-SNAPSHOT-bin.tar.gz` f
 
 ## To run tests
 
+### Unit tests
 ```
 mvn test -Dhbase.profile=2.1 -DPhoenixPatchProcess -Dskip.code-coverage
+```
+
+- -Dhbase.profile=2.1, builds phoenix with hbase 2.1.10-TDP-0.1.0-SNAPSHOT
+- -DPhoenixPatchProcess, disables the build of the shaded artifacts (not necessary for tests)
+- -Dskip.code-coverage, self explanatory
+
+### Integration tests
+
+```
+mvn verify -Dhbase.profile=2.1 -DPhoenixPatchProcess -Dskip.code-coverage
 ```
 
 - -Dhbase.profile=2.1, builds phoenix with hbase 2.1.10-TDP-0.1.0-SNAPSHOT
