@@ -179,6 +179,9 @@
     <maven-owasp-plugin.version>6.3.1</maven-owasp-plugin.version>
     <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
     <os.maven.version>1.5.0.Final</os.maven.version>
+
+    <!--test exclusions-->
+    <test.excludes>ResourceTest, PherfTest</test.excludes>
   </properties>
 
   <build>

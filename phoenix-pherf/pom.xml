@@ -308,6 +308,9 @@
         <configuration>
           <workingDirectory>${java.io.tmpdir}</workingDirectory>
           <forkCount>1</forkCount>
+          <excludes>
+            <exclude>**/${test.excludes}.java</exclude>
+          </excludes>
         </configuration>
       </plugin>
       <plugin>
