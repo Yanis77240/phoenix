@@ -181,7 +181,7 @@
     <os.maven.version>1.5.0.Final</os.maven.version>
 
     <!--test exclusions-->
-    <test.excludes>ResourceTest, PherfTest</test.excludes>
+    <!--<test.excludes>ResourceTest, PherfTest</test.excludes>-->
   </properties>
 
   <build>
@@ -1859,6 +1859,15 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>3.1.2</version>
+        <configuration>
+            <aggregate>true</aggregate>
+            <linkXRef>true</linkXRef>
+        </configuration>
       </plugin>
     </plugins>
   </reporting>
