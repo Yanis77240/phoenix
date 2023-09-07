@@ -29,7 +29,7 @@ podTemplate(containers: [
             stage ('Build') {
                 echo "Building.."
                 sh '''
-                mvn clean install -DskipTests -Dhbase.profile=2.1
+                mvn clean install -DskipTests -Dhbase.profile=2.1 -Dstyle.color=never
                 '''
             }
             stage('Test') {
@@ -37,7 +37,7 @@ podTemplate(containers: [
                 withCredentials([usernamePassword(credentialsId: '4b87bd68-ad4c-11ed-afa1-0242ac120002', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     withEnv(["number=${currentBuild.number}"]) {
                         /* Perform the tests and the surefire reporting*/
-                        sh 'mvn clean test -Dhbase.profile=2.1 --batch-mode -Dsurefire.rerunFailingTestsCount=3 --fail-never | tee output.txt'
+                        sh 'mvn clean test -Dhbase.profile=2.1 --batch-mode -Dsurefire.rerunFailingTestsCount=3 --fail-never -Dstyle.color=never | tee output.txt'
                         sh 'mvn surefire-report:report-only  -Daggregate=true'
                         sh 'curl -v -u $user:$pass --upload-file target/site/surefire-report.html http://10.110.4.212:8081/repository/test-reports/phoenix/surefire-report-${number}.html'
                         /* extract the java-test and scalatest-plugin data output and remove all color signs */
@@ -56,7 +56,7 @@ podTemplate(containers: [
             stage('Deliver') {
                 echo "Deploy..."
                 withCredentials([usernamePassword(credentialsId: '4b87bd68-ad4c-11ed-afa1-0242ac120002', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                    sh 'mvn clean deploy -DskipTests -Dhbase.profile=2.1 -s settings.xml'
+                    sh 'mvn clean deploy -DskipTests -Dhbase.profile=2.1 -Dstyle.color=never -s settings.xml'
                 }
             }
             stage("Publish tar.gz to Nexus") {
