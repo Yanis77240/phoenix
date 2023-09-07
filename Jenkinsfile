@@ -18,7 +18,7 @@ podTemplate(containers: [
                     withEnv(["number=${currentBuild.number}"]) {
                         sh '''
                         cd test-comparison
-                        curl -v http://10.110.4.212:8081/repository/component-test-comparison/${file} > ${file}
+                        curl -v http://10.110.4.212:8081/repository/component-test-comparison/phoenix-5.1/${file} > ${file}
                         python3 src/python/comparison_file_check.py ${file}
                         echo "python3 src/python/main.py 3.0.0 ${number} ${file}" > transformation.sh
                         chmod 777 transformation.sh
@@ -34,20 +34,10 @@ podTemplate(containers: [
             }
             stage('Test') {
                 echo "Testing..."
-                withEnv(["number=${currentBuild.number}"]) {
-                    withCredentials([usernamePassword(credentialsId: '4b87bd68-ad4c-11ed-afa1-0242ac120002', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                        sh 'mvn clean test -Dhbase.profile=2.1 --batch-mode -Dsurefire.rerunFailingTestsCount=3 --fail-never'
-                        sh 'mvn surefire-report:report-only  -Daggregate=true'
-                        sh 'curl -v -u $user:$pass --upload-file target/site/surefire-report.html http://10.110.4.212:8081/repository/test-reports/phoenix-5.1.3/surefire-report-${number}.html'
-                    }
-                }
-            }
-            stage('Test') {
-                echo "Testing..."
                 withCredentials([usernamePassword(credentialsId: '4b87bd68-ad4c-11ed-afa1-0242ac120002', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     withEnv(["number=${currentBuild.number}"]) {
                         /* Perform the tests and the surefire reporting*/
-                        sh 'mvn clean test -Dhbase.profile=2.1 --batch-mode -Dsurefire.rerunFailingTestsCount=3 --fail-never'
+                        sh 'mvn clean test -Dhbase.profile=2.1 --batch-mode -Dsurefire.rerunFailingTestsCount=3 --fail-never | tee output.txt'
                         sh 'mvn surefire-report:report-only  -Daggregate=true'
                         sh 'curl -v -u $user:$pass --upload-file target/site/surefire-report.html http://10.110.4.212:8081/repository/test-reports/phoenix/surefire-report-${number}.html'
                         /* extract the java-test and scalatest-plugin data output and remove all color signs */
@@ -58,7 +48,7 @@ podTemplate(containers: [
                         cd test-comparison
                         ./transformation.sh
                         ./src/decision.sh ${number}
-                        curl -v -u $user:$pass --upload-file results-${number}.json http://10.110.4.212:8081/repository/component-test-comparison/phoenix-5.1.3/results-${number}.json
+                        curl -v -u $user:$pass --upload-file results-${number}.json http://10.110.4.212:8081/repository/component-test-comparison/phoenix-5.1/results-${number}.json
                         '''
                     }
                 }
